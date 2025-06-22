@@ -8,6 +8,9 @@ import {
   IconBrandGoogle,
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
+import { Link } from "lucide-react";
+
+const TITLE = 'Klpora'
 
 export function SignupForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -15,17 +18,13 @@ export function SignupForm() {
     console.log("Form submitted");
   };
   return (
-    <div className="shadow-input mx-auto w-full max-w-md rounded-none p-4 md:rounded-2xl md:p-8 dark:bg-black">
-      <h2 className="text-xl font-bold text-neutral-800 dark:text-neutral-200">
-        Welcome to Aceternity
+    <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-bg border p-4 md:rounded-2xl md:p-8">
+      <h2 className="text-heading-lg flex-center">
+        Welcome to {TITLE}
       </h2>
 
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="mb-4 flex flex-col space-y-2 md:flex-row md:space-y-0 md:space-x-2">
-          <LabelInputContainer>
-            <Label htmlFor="name">Name</Label>
-            <Input id="name" placeholder="Tyler" type="text" />
-          </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="username">Username</Label>
             <Input id="username" placeholder="Durden" type="text" />
@@ -33,19 +32,11 @@ export function SignupForm() {
         </div>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="projectmayhem@fc.com" type="email" />
+          <Input id="email" placeholder="example@gmail.com" type="email" />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
           <Input id="password" placeholder="••••••••" type="password" />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="password">Conform password</Label>
-          <Input
-            id="password"
-            placeholder="••••••••"
-            type="password"
-          />
         </LabelInputContainer>
 
         <button
@@ -70,6 +61,15 @@ export function SignupForm() {
             <BottomGradient />
           </button>
         </div>
+
+        <div className="flex-center">
+          <p className="text-caption text-text-muted text-center mt-6">
+            Already have an account?{" "}
+            <Link className="text-primary hover:underline ">
+              Sign in
+            </Link>
+          </p>
+        </div>
       </form>
     </div>
   );
@@ -77,9 +77,13 @@ export function SignupForm() {
 
 const BottomGradient = () => {
   return (
+    // <>
+    //   <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    //   <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+    // </>
     <>
-      <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-cyan-500 to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
-      <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-indigo-500 to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-0 -bottom-px block h-px w-full bg-gradient-to-r from-transparent via-highlight to-transparent opacity-0 transition duration-500 group-hover/btn:opacity-100" />
+    <span className="absolute inset-x-10 -bottom-px mx-auto block h-px w-1/2 bg-gradient-to-r from-transparent via-primary to-transparent opacity-0 blur-sm transition duration-500 group-hover/btn:opacity-100" />
     </>
   );
 };
