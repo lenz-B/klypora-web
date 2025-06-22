@@ -25,6 +25,12 @@
   --warning: oklch(0.7 0.15 100);
   --success: oklch(0.7 0.15 160);
   --info: oklch(0.7 0.15 260);
+
+  /* Main color shades */
+  --primary-light: oklch(0.757 0.415 44.186);
+  --primary-lighter: oklch(0.857 0.415 44.186);
+  --primary-dark: oklch(0.557 0.415 44.186);
+  --primary-darker: oklch(0.457 0.415 44.186);
   
   /* Typography system */
   --font-family: "Inter", sans-serif;
@@ -54,6 +60,7 @@
   --muted: var(--bg-light);
   --muted-foreground: var(--text-muted);
   --accent: var(--highlight);
+  --accent-dark: oklch(0.657 0.415 44.186);
   --accent-foreground: var(--text);
   --destructive: var(--danger);
   --destructive-foreground: var(--text);
@@ -254,4 +261,13 @@
 
 @utility flex-center {
   @apply flex justify-center items-center;
+}
+
+@layer utilities {
+  .from-accent {
+    --tw-gradient-from: oklch(0.97 0.415 44.186);
+  }
+  .to-accent-dark {
+    --tw-gradient-to: oklch(0.87 0.415 44.186);
+  }
 }

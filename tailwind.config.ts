@@ -48,8 +48,9 @@ module.exports = {
           foreground: "hsl(var(--muted-foreground))"
         },
         accent: {
-          DEFAULT: "hsl(var(--accent))",
-          foreground: "hsl(var(--accent-foreground))"
+          DEFAULT: 'color(oklch var(--accent))',
+          dark: 'color(oklch var(--accent-dark))',
+          foreground: "hsl(var(--accent-foreground))",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
