@@ -3,14 +3,15 @@ import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import {
   IconBrandGithub,
   IconBrandGoogle,
   IconBrandOnlyfans,
 } from "@tabler/icons-react";
-import { Link } from "lucide-react";
 
-const TITLE = 'Klpora'
+const TITLE = 'Klypora'
 
 export function SignupForm() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -18,6 +19,7 @@ export function SignupForm() {
     console.log("Form submitted");
   };
   return (
+    
     <div className="shadow-input mx-auto w-full max-w-md rounded-none bg-bg border p-4 md:rounded-2xl md:p-8">
       <h2 className="text-heading-lg flex-center">
         Welcome to {TITLE}
@@ -39,38 +41,42 @@ export function SignupForm() {
           <Input id="password" placeholder="••••••••" type="password" />
         </LabelInputContainer>
 
-        <button
-          // className="group/btn relative block h-10 w-full rounded-xl bg-gradient-to-br from-accent to-neutral-900 font-medium text-white shadow-input"
-          // className="group/btn relative block h-10 w-full rounded-md bg-gradient-to-br from-black to-neutral-600 font-medium text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] dark:bg-zinc-800 dark:from-zinc-900 dark:to-zinc-900 dark:shadow-[0px_1px_0px_0px_#27272a_inset,0px_-1px_0px_0px_#27272a_inset]"
+        <motion.button
+          whileHover={{ scale: 0.99 }}
+          whileTap={{ scale: 0.97 }}
+          transition={{ type: "spring", stiffness: 100, damping: 10 }}
           className="group/btn relative block h-10 w-full rounded-xl 
-          bg-gradient-to-br from-accent to-accent-dark font-medium 
-          text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]
-          transition-colors duration-300 hover:from-accent/80 hover:to-accent/90"
+            bg-gradient-to-br from-accent to-accent-dark font-medium 
+            text-white shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]
+            "
           type="submit"
         >
           Sign up &rarr;
           <BottomGradient />
-        </button>
+        </motion.button>
 
         <div className="my-8 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
 
         <div className="flex flex-col space-y-4">
-          <button
-            className="group/btn shadow-input relative flex h-10 w-full items-center justify-start space-x-2 rounded-xl bg-gray-50 px-4 font-medium text-black dark:bg-zinc-900 dark:shadow-[0px_0px_1px_1px_#262626]"
+          <motion.button
+            whileHover={{ scale: 0.99 }}
+            whileTap={{ scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 100, damping: 10 }}
+            className="group/btn shadow-input bg-gradient-to-br from-accent/2 to-zinc-900 relative flex h-10 w-full flex-center space-x-2 rounded-xl border"
             type="submit"
           >
-            <IconBrandGoogle className="h-4 w-4 text-neutral-800 dark:text-neutral-300" />
-            <span className="text-sm text-neutral-700 dark:text-neutral-300">
-              Google
+            <IconBrandGoogle className="h-4 w-4 text-gray-50 " />
+            <span className="text-sm text-gray-50 font-medium ">
+              Log in with Google
             </span>
             <BottomGradient />
-          </button>
+          </motion.button>
         </div>
 
         <div className="flex-center">
-          <p className="text-caption text-text-muted text-center mt-6">
+          <p className="text-caption text-gray-500 text-center mt-6">
             Already have an account?{" "}
-            <Link className="text-primary hover:underline ">
+            <Link href="/login" className="text-gray-200 hover:text-white text-caption">
               Sign in
             </Link>
           </p>
