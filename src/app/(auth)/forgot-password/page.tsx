@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
             <CardDescription className="text-text-muted">
               {isSubmitted
                 ? "We've sent a password reset link to your email address"
-                : "Enter your email address and we'll send you a link to reset your password"}
+                : "Enter your email address & we'll send you a link to reset your password"}
             </CardDescription>
           </CardHeader>
 
@@ -65,12 +65,15 @@ export default function ForgotPasswordPage() {
                   </div>
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary text-bg font-semibold py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Send Reset Link
-                </Button>
+                <div className="flex-center">
+                  <Button
+                    type="submit"
+                    className="bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Send Reset Link
+                  </Button>
+                </div>
+
               </form>
             ) : (
               <div className="space-y-4">
@@ -81,7 +84,7 @@ export default function ForgotPasswordPage() {
                 <Button
                   onClick={() => setIsSubmitted(false)}
                   variant="outline"
-                  className="w-full bg-bg-light/10 border-border-muted/30 text-text hover:bg-bg-light/20 hover:border-primary/50 transition-all duration-300"
+                  className=" w-full bg-bg-light/10 border-border-muted/30 text-text hover:bg-bg-light/20 hover:border-primary/50 transition-all duration-300"
                 >
                   Send Another Link
                 </Button>

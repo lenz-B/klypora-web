@@ -97,14 +97,18 @@ export default function OTPVerificationPage() {
                   ))}
                 </div>
 
-                <Button
-                  type="submit"
-                  className="w-full bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary text-bg font-semibold py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
-                >
-                  Verify Code
-                </Button>
+                <div className="flex-center">
+                  <Button
+                    type="submit"
+                    
+                    className="bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+                  >
+                    Verify Code
+                  </Button>
+                </div>
 
-                <div className="text-center">
+
+                <div className="text-center flex-center">
                   <p className="text-sm text-text-muted mb-2">Didn't receive the code?</p>
                   <button
                     type="button"
@@ -123,14 +127,14 @@ export default function OTPVerificationPage() {
                 </div>
 
                 <Link href="/login">
-                  <Button className="w-full bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary text-bg font-semibold py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]">
+                  <Button className="w-full bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]">
                     Continue to Login
                   </Button>
                 </Link>
               </div>
             )}
 
-            <div className="flex items-center justify-center">
+            <div className="flex-center">
               <Link
                 href="/login"
                 className="flex items-center text-sm text-text-muted hover:text-text transition-colors"
