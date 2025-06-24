@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { motion } from "framer-motion";
+import { Button } from "./ui/button";
 import {
   IconBrandGithub,
   IconBrandGoogle,

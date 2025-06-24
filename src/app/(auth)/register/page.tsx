@@ -1,4 +1,5 @@
 import { SignupForm } from '@/components/signup-form'
+// import { SplashCursor } from '@/components/ui/splash-cursor'
 import React from 'react'
 
 const Register = () => {
