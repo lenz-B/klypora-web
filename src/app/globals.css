@@ -14,13 +14,13 @@
   --text-subtle: oklch(0.7 0.03 264);   /* Even more muted text */
   
   /* Interactive & UI elements */
-  --highlight: oklch(0.97 0.415 44.186);
+  --highlight: oklch(0.99 0.415 44.186);
   --border: oklch(0.92 0.004 286.32);
   --border-muted: oklch(0.3 0.03 264);
   
   /* Semantic colors */
-  --primary: oklch(0.657 0.415 44.186);
-  --secondary: oklch(0.657 .415 224.186);
+  --main: oklch(1.5 0.415 44.186);
+  --second: oklch(0.657 .415 224.186);
   --danger: oklch(0.7 0.15 30);
   --warning: oklch(0.7 0.15 100);
   --success: oklch(0.7 0.15 160);
@@ -53,9 +53,9 @@
   --card-foreground: var(--text);
   --popover: var(--bg-light);
   --popover-foreground: var(--text);
-  --primary: var(--primary);
+  --primary: var(--main);
   --primary-foreground: var(--bg);
-  --secondary: var(--secondary);
+  --secondary: var(--second);
   --secondary-foreground: var(--bg);
   --muted: var(--bg-light);
   --muted-foreground: var(--text-muted);
@@ -269,5 +269,14 @@
   }
   .to-accent-dark {
     --tw-gradient-to: oklch(0.87 0.415 44.186);
+  }
+  .bg-dark {
+    background-color: var(--bg-dark);
+  }
+  .bg {
+    background-color: var(--bg);
+  }
+  .bg-light {
+    background-color: var(--bg-light);
   }
 }

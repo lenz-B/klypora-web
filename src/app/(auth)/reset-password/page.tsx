@@ -111,7 +111,7 @@ export default function ResetPasswordPage() {
                 <div className="mt-5 flex-center">
                   <Button
                     type="submit"
-                    className="w-full bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+                    className="w-full py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Reset Password
                   </Button>                  

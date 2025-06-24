@@ -101,7 +101,7 @@ export default function OTPVerificationPage() {
                   <Button
                     type="submit"
                     
-                    className="bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+                    className="py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Verify Code
                   </Button>
@@ -109,11 +109,11 @@ export default function OTPVerificationPage() {
 
 
                 <div className="text-center flex-center">
-                  <p className="text-sm text-text-muted mb-2">Didn't receive the code?</p>
+                  <p className="text-sm text-gray-700 mb-2">Didn't receive the code?</p>
                   <button
                     type="button"
                     onClick={handleResendOTP}
-                    className="text-sm text-primary hover:text-primary-light transition-colors font-medium"
+                    className="text-sm text-gray-500 hover:text-gray-300 transition-colors font-medium"
                   >
                     Resend Code
                   </button>
@@ -137,7 +137,7 @@ export default function OTPVerificationPage() {
             <div className="flex-center">
               <Link
                 href="/login"
-                className="flex items-center text-sm text-text-muted hover:text-text transition-colors"
+                className="flex items-center text-sm text-gray-500 hover:text-gray-300 transition-colors"
               >
                 <ArrowLeft className="mr-2 h-4 w-4" />
                 Back to Login

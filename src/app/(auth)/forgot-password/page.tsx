@@ -68,7 +68,9 @@ export default function ForgotPasswordPage() {
                 <div className="flex-center">
                   <Button
                     type="submit"
-                    className="bg-gradient-to-br from-primary to-primary-dark hover:from-primary-light hover:to-primary py-2.5 transition-all duration-300 hover:shadow-lg hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
+                    className="py-2.5 transition-all 
+                    duration-300 hover:shadow-lg hover:shadow-primary/25 
+                    hover:scale-[1.02] active:scale-[0.98]"
                   >
                     Send Reset Link
                   </Button>
@@ -84,7 +86,9 @@ export default function ForgotPasswordPage() {
                 <Button
                   onClick={() => setIsSubmitted(false)}
                   variant="outline"
-                  className=" w-full bg-bg-light/10 border-border-muted/30 text-text hover:bg-bg-light/20 hover:border-primary/50 transition-all duration-300"
+                  className=" w-full bg-bg-light/10 border-border-muted/30 
+                  text-text hover:bg-bg-light/20 hover:border-primary/50 
+                  transition-all duration-300"
                 >
                   Send Another Link
                 </Button>

@@ -69,8 +69,8 @@ export function Button({
         "rounded-full border border-border-muted p-px",
         
         // Background & interactions - using your color system
-        "bg-bg-dark/20 hover:bg-bg-dark/10",
-        "dark:bg-bg-light/20 dark:hover:bg-bg-light/10",
+        // "bg-bg-dark/20 hover:bg-bg-dark/10",
+        // "bg-bg-light/20 dark:hover:bg-bg-light/10",
         
         // Transitions - Tailwind classes
         "transition-all duration-500 ease-in-out",
@@ -94,10 +94,10 @@ export function Button({
           // Shape - inheriting from parent
           "rounded-[inherit]",
           
+          className,
           // Colors - using your design tokens
-          "bg-bg-dark text-text",
+          "shadow-input from-bg-light to-bg-light relative",
           
-          className
         )}
       >
         {children}
