@@ -85,6 +85,7 @@ module.exports = {
       // Font settings (unchanged)
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
+        logo: ['var(--font-bacalar)'],
       },
       fontSize: {
         'heading-lg': ['1.25rem', { lineHeight: '1.4', fontWeight: '700' }],

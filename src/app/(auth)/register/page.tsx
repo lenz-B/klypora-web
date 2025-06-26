@@ -10,6 +10,7 @@ import { SplashCursor } from "@/components/ui/splash-cursor"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
 import Link from "next/link"
 import { IconBrandGoogle } from "@tabler/icons-react"
+import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -43,8 +44,12 @@ export default function RegisterPage() {
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <Card className="w-full max-w-md animate-fade-in">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold text-text">Welcome to Klypora</CardTitle>
-            <CardDescription className="text-text-muted">Create your account to get started</CardDescription>
+            <CardTitle className="text-2xl font-bold font-logo text-text">
+            <div className="flex-center">
+              <TextHoverEffect text="Klypora" />
+            </div>
+            </CardTitle>
+            <CardDescription style={{ fontFamily: 'var(--font-bacalar)' }} className="text-text-muted">Create your account to get started</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">

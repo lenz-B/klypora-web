@@ -1,7 +1,13 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@font-face {
+  font-family: 'Bacalar';
+  src: url('/fonts/BacalarTest-SemiExpanded.woff2') format('woff2');
+  font-display: swap;
+}
 
 :root {
+  --font-bacalar: 'Bacalar';
   /* === YOUR CUSTOM DESIGN TOKENS === */
   /* Background layers (darkest to lightest) */
   --bg-dark: oklch(0.1 0.015 264);      /* Bottom layer */
