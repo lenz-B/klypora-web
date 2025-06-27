@@ -49,7 +49,7 @@ export default function RegisterPage() {
               <TextHoverEffect text="Klypora" />
             </div>
             </CardTitle>
-            <CardDescription style={{ fontFamily: 'var(--font-bacalar)' }} className="text-text-muted">Create your account to get started</CardDescription>
+            <CardDescription className="font-logo text-text-muted">Create your account to get started</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">

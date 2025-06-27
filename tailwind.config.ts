@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  darkMode: ['class'], // Enable dark mode with .dark class
+  darkMode: ['class'],
   content: [
     './pages//*.{js,jsx,ts,tsx}',
     './components//*.{js,jsx,ts,tsx}',
@@ -10,7 +10,6 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Direct OKLCH mappings from :root
         'bg-dark': 'var(--bg-dark)',
         'bg': 'var(--bg)',
         'bg-light': 'var(--bg-light)',
@@ -24,7 +23,6 @@ module.exports = {
         'success': 'var(--success)',
         'info': 'var(--info)',
 
-        // Use OKLCH directly, avoid HSL wrapping
         background: 'var(--background)',
         foreground: 'var(--foreground)',
         card: {
@@ -36,11 +34,11 @@ module.exports = {
           foreground: 'var(--popover-foreground)',
         },
         primary: {
-          DEFAULT: 'var(--primaryq)', // OKLCH color
+          DEFAULT: 'var(--main)',
           foreground: 'var(--primary-foreground)',
         },
         secondary: {
-          DEFAULT: 'var(--secondary)', // OKLCH color
+          DEFAULT: 'var(--secondary)', 
           foreground: 'var(--secondary-foreground)',
         },
         muted: {
@@ -48,7 +46,7 @@ module.exports = {
           foreground: 'var(--muted-foreground)',
         },
         accent: {
-          DEFAULT: 'var(--accent)', // Fixed syntax
+          DEFAULT: 'var(--accent)', 
           dark: 'var(--accent-dark)',
           foreground: 'var(--accent-foreground)',
         },
@@ -73,16 +71,16 @@ module.exports = {
         sidebar: {
           DEFAULT: 'var(--sidebar)',
           foreground: 'var(--sidebar-foreground)',
-          primary: 'var(--primary)', // Reuse primary
+          primary: 'var(--primary)', 
           'primary-foreground': 'var(--primary-foreground)',
-          accent: 'var(--secondary)', // Reuse secondary
+          accent: 'var(--secondary)', 
           'accent-foreground': 'var(--secondary-foreground)',
           border: 'var(--sidebar-border)',
-          ring: 'var(--ring)', // Reuse global ring
+          ring: 'var(--ring)', 
         },
       },
 
-      // Font settings (unchanged)
+      // Font settings
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
         logo: ['var(--font-bacalar)'],
@@ -94,14 +92,12 @@ module.exports = {
         'caption': ['0.875rem', { lineHeight: '1.4', fontWeight: '400' }],
       },
 
-      // Border radius (unchanged)
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
       },
 
-      // Box shadow (unchanged)
       boxShadow: {
         input: 'var(--shadow-input)',
         sm: 'var(--shadow-sm)',
@@ -109,25 +105,22 @@ module.exports = {
         lg: 'var(--shadow-lg)',
       },
 
-      // Spacing system (added --space-lg)
       spacing: {
         xs: 'var(--space-xs)',
         sm: 'var(--space-sm)',
         md: 'var(--space-md)',
-        lg: 'var(--space-lg)', // Added for stack-lg and animations
+        lg: 'var(--space-lg)',
         xl: 'var(--space-xl)',
         '2xl': 'var(--space-2xl)',
         '3xl': 'var(--space-3xl)',
       },
 
-      // Transition durations (unchanged)
       transitionDuration: {
         fast: '150ms',
         base: '200ms',
         slow: '300ms',
       },
 
-      // Animations (replaced --transition-base with base duration)
       animation: {
         'fade-in': 'fadeIn 200ms',
         'slide-up': 'slideUp 200ms',
@@ -135,7 +128,6 @@ module.exports = {
         'scale-in': 'scaleIn 200ms',
       },
 
-      // Keyframes (unchanged)
       keyframes: {
         fadeIn: {
           '0%': { opacity: '0' },
@@ -209,7 +201,6 @@ module.exports = {
         '.stack-lg > * + *': { marginTop: 'var(--space-lg)' },
         '.stack-xl > * + *': { marginTop: 'var(--space-xl)' },
 
-        // Gradients (added fallback for --primary-dark)
         '.gradient-primary': {
           background: 'linear-gradient(135deg, var(--primary), var(--primary-dark, var(--primary)))',
         },
@@ -217,7 +208,6 @@ module.exports = {
           background: 'linear-gradient(135deg, var(--bg), var(--bg-light))',
         },
 
-        // Accessibility utility
         '.sr-only': {
           position: 'absolute',
           width: '1px',

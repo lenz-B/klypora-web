@@ -33,7 +33,7 @@ export default function RootLayout({
     <html lang="en" className={bacalar.variable}>
       <body
         suppressHydrationWarning
-        className={`bg-dark ${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`bg-dark ${geistSans.variable} ${geistMono.variable} ${bacalar.variable} antialiased`}
       >
         {children}
       </body>
