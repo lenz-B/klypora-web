@@ -5,15 +5,27 @@ import { motion } from "framer-motion"
 export const TextHoverEffect = ({
   text,
   duration,
+  size = 'text-5xl'
 }: {
   text: string
   duration?: number
-  automatic?: boolean
+  size?: string
 }) => {
   const svgRef = useRef<SVGSVGElement>(null)
   const [cursor, setCursor] = useState({ x: 0, y: 0 })
   const [hovered, setHovered] = useState(false)
   const [maskPosition, setMaskPosition] = useState({ cx: "50%", cy: "50%" })
+
+  // Optional: size map for tighter bounding box
+  const sizeToViewBoxHeight = {
+    "text-4xl": 40,
+    "text-5xl": 50,
+    "text-6xl": 60,
+    "text-7xl": 75,
+    "text-8xl": 90,
+  }
+
+  const viewBoxHeight = sizeToViewBoxHeight[size as keyof typeof sizeToViewBoxHeight] || 50
 
   useEffect(() => {
     if (svgRef.current && cursor.x !== null && cursor.y !== null) {
@@ -30,14 +42,13 @@ export const TextHoverEffect = ({
   return (
     <svg
       ref={svgRef}
-      width="100%"
-      height="100%"
-      viewBox="0 0 300 100"
+      viewBox={`0 0 300 ${viewBoxHeight}`}
+      preserveAspectRatio="xMidYMid meet"
       xmlns="http://www.w3.org/2000/svg"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onMouseMove={(e) => setCursor({ x: e.clientX, y: e.clientY })}
-      className="select-none"
+      className="inline-block select-none"
     >
       <defs>
         <linearGradient id="textGradient" gradientUnits="userSpaceOnUse" cx="50%" cy="50%" r="25%">
@@ -67,26 +78,26 @@ export const TextHoverEffect = ({
         </mask>
       </defs>
 
-      {/* Base text with subtle fill */}
+      {/* Base text */}
       <text
         x="50%"
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
-        className="font-[helvetica] font-bold text-7xl fill-text-muted"
+        className={`font-logo font-bold ${size}`}
         style={{ opacity: hovered ? 0 : 0 }}
       >
         {text}
       </text>
 
-      {/* Animated stroke outline */}
+      {/* Stroke outline */}
       <motion.text
         x="50%"
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
         strokeWidth="0.3"
-        className="font-[helvetica] font-bold fill-transparent text-7xl stroke-border"
+        className={`font-logo font-bold fill-transparent ${size} stroke-border`}
         initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
         animate={{
           strokeDashoffset: 0,
@@ -100,7 +111,7 @@ export const TextHoverEffect = ({
         {text}
       </motion.text>
 
-      {/* Gradient fill text with mask */}
+      {/* Gradient fill */}
       <text
         x="50%"
         y="50%"
@@ -108,10 +119,11 @@ export const TextHoverEffect = ({
         dominantBaseline="middle"
         fill="url(#textGradient)"
         mask="url(#textMask)"
-        className="font-[helvetica] font-bold text-7xl"
+        className={`font-logo font-bold ${size}`}
       >
         {text}
       </text>
     </svg>
   )
 }
+

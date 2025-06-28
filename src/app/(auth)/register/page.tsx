@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useState } from "react"
+import { SubmitHandler, useForm } from "react-hook-form"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,22 +13,18 @@ import Link from "next/link"
 import { IconBrandGoogle } from "@tabler/icons-react"
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 
+type FormFields = {
+  email: string;
+  username: string;
+  password: string;
+}
+
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    username: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  })
+  const { register, handleSubmit } = useForm<FormFields>()
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Register attempt:", formData)
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
+  const onSubmit: SubmitHandler<FormFields>= (data) => {
+    console.log(data);
   }
 
   return (
@@ -44,16 +41,16 @@ export default function RegisterPage() {
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <Card className="w-full max-w-md animate-fade-in">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold font-logo text-text">
+            <CardTitle className="text-2xl font-bold text-text">
             <div className="flex-center">
-              <TextHoverEffect text="Klypora" />
+              <TextHoverEffect text="Klypora"/>  
             </div>
             </CardTitle>
-            <CardDescription className="font-logo text-text-muted">Create your account to get started</CardDescription>
+            <CardDescription className="font-sans text-text-muted">Create your account to get started</CardDescription>
           </CardHeader>
 
           <CardContent className="space-y-4">
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-2">
                 <Label htmlFor="username" className="text-text">
                   Username
@@ -62,12 +59,13 @@ export default function RegisterPage() {
                   <User className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
                   <Input
                     id="username"
+                    {...register("username", {
+                      required: true
+                    })}
                     type="text"
                     placeholder="Enter your username"
-                    value={formData.username}
-                    onChange={(e) => handleInputChange("username", e.target.value)}
                     className="pl-10"
-                    required
+                    // required
                   />
                 </div>
               </div>
@@ -80,12 +78,13 @@ export default function RegisterPage() {
                   <Mail className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
                   <Input
                     id="email"
+                    {...register('email', {
+                      required: true
+                    })}
                     type="email"
                     placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={(e) => handleInputChange("email", e.target.value)}
                     className="pl-10"
-                    required
+                    // required
                   />
                 </div>
               </div>
@@ -98,12 +97,13 @@ export default function RegisterPage() {
                   <Lock className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
                   <Input
                     id="password"
+                    {...register('password', {
+                      required: true
+                    })}
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={(e) => handleInputChange("password", e.target.value)}
                     className="pl-10 pr-10"
-                    required
+                    // required
                   />
                   <button
                     type="button"

@@ -10,6 +10,7 @@ import { SplashCursor } from "@/components/ui/splash-cursor"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import Link from "next/link"
 import { IconBrandGoogle } from "@tabler/icons-react"
+import { TextHoverEffect } from "@/components/ui/text-hover-effect"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
@@ -35,7 +36,11 @@ export default function LoginPage() {
       <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
         <Card className="w-full max-w-md animate-fade-in">
           <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold text-text">Welcome Back</CardTitle>
+            <CardTitle className="text-2xl font-bold text-text">
+            <div className="flex-center">
+              <TextHoverEffect text="Klypora"/>  
+            </div>
+            </CardTitle>
             <CardDescription className="text-text-muted">Sign in to your account to continue</CardDescription>
           </CardHeader>
 

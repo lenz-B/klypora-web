@@ -9,7 +9,7 @@
 :root {
   /* === YOUR CUSTOM DESIGN TOKENS === */
   /* Fonts */
-  --font-bacalar: 'Bacalar';
+  --font-bacalar: 'Bacalar', sans-serif;
   
   /* Background layers (darkest to lightest) */
   --bg-dark: oklch(0.1 0.015 264);      /* Bottom layer */
@@ -145,6 +145,7 @@
   
   /* Fonts */
   --font-sans: var(--font-family);
+  --font-logo: var(--font-bacalar);
   
   /* Charts */
   --color-chart-1: var(--chart-1);

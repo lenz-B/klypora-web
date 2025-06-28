@@ -30,7 +30,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={bacalar.variable}>
+    <html lang="en">
       <body
         suppressHydrationWarning
         className={`bg-dark ${geistSans.variable} ${geistMono.variable} ${bacalar.variable} antialiased`}
