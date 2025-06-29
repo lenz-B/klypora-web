@@ -2,7 +2,6 @@
 import { useEffect, useRef } from "react"
 
 function SplashCursor({
-  // Add whatever props you like for customization
   SIM_RESOLUTION = 128,
   DYE_RESOLUTION = 1440,
   CAPTURE_RESOLUTION = 512,
@@ -18,9 +17,9 @@ function SplashCursor({
   BACK_COLOR = { r: 0.5, g: 0, b: 0 },
   TRANSPARENT = true,
 }) {
-  const canvasRef = useRef(null)
-  const glRef = useRef(null)
-  const extRef = useRef(null)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
+  const glRef = useRef<WebGLRenderingContext | WebGL2RenderingContext | null>(null)
+  const extRef = useRef<any>(null)
   const configRef = useRef({
     SIM_RESOLUTION,
     DYE_RESOLUTION,
@@ -41,8 +40,28 @@ function SplashCursor({
   const pointersRef = useRef([{}])
 
   useEffect(() => {
-    const canvas = canvasRef.current
+    console.log("✅ SplashCursor mounted");
+
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      console.error("❌ Canvas not found");
+      return;
+    }
+  
+    canvas.addEventListener("mousemove", () => {
+      console.log("🟢 Mousemove on canvas");
+    });
+    
     if (!canvas) return
+
+    
+
+    console.log("SplashCursor initialized")
+
+    // Temporary debug: test mouse events
+    canvas.addEventListener("mousemove", () => {
+      console.log("Mouse moved on canvas")
+    })
 
     function pointerPrototype() {
       this.id = -1
@@ -59,7 +78,12 @@ function SplashCursor({
 
     pointersRef.current[0] = new pointerPrototype()
 
+    // Restore original context/extension assignment
     const { gl, ext } = getWebGLContext(canvas)
+    if (!gl || !ext) {
+      console.error("Failed to initialize WebGL context")
+      return
+    }
     glRef.current = gl
     extRef.current = ext
     if (!ext.supportLinearFiltering) {
@@ -67,7 +91,7 @@ function SplashCursor({
       configRef.current.SHADING = false
     }
 
-    function getWebGLContext(canvas) {
+    function getWebGLContext(canvas: HTMLCanvasElement) {
       const params = {
         alpha: true,
         depth: false,
@@ -75,9 +99,13 @@ function SplashCursor({
         antialias: false,
         preserveDrawingBuffer: false,
       }
-      let gl = canvas.getContext("webgl2", params)
+      let gl = canvas.getContext("webgl2", params) as WebGL2RenderingContext | null
       const isWebGL2 = !!gl
-      if (!isWebGL2) gl = canvas.getContext("webgl", params) || canvas.getContext("experimental-webgl", params)
+      if (!isWebGL2) gl = (canvas.getContext("webgl", params) || canvas.getContext("experimental-webgl", params)) as WebGLRenderingContext | null
+      if (!gl) {
+        console.error("WebGL not supported")
+        return { gl: null, ext: null }
+      }
       let halfFloat
       let supportLinearFiltering
       if (isWebGL2) {
@@ -88,15 +116,15 @@ function SplashCursor({
         supportLinearFiltering = gl.getExtension("OES_texture_half_float_linear")
       }
       gl.clearColor(0.0, 0.0, 0.0, 1.0)
-      const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat && halfFloat.HALF_FLOAT_OES
+      const halfFloatTexType = isWebGL2 ? (gl as WebGL2RenderingContext).HALF_FLOAT : halfFloat && halfFloat.HALF_FLOAT_OES
       let formatRGBA
       let formatRG
       let formatR
 
       if (isWebGL2) {
-        formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType)
-        formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType)
-        formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType)
+        formatRGBA = getSupportedFormat(gl, (gl as WebGL2RenderingContext).RGBA16F, gl.RGBA, halfFloatTexType)
+        formatRG = getSupportedFormat(gl, (gl as WebGL2RenderingContext).RG16F, (gl as WebGL2RenderingContext).RG, halfFloatTexType)
+        formatR = getSupportedFormat(gl, (gl as WebGL2RenderingContext).R16F, (gl as WebGL2RenderingContext).RED, halfFloatTexType)
       } else {
         formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
         formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType)
@@ -751,14 +779,14 @@ function SplashCursor({
       // Curl
       curlProgram.bind()
       glRef.current.uniform2f(curlProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
-      glRef.current.uniform1i(curlProgram.uniforms.uVelocity, velocity.read.attach(0))
+      glRef.current.uniform1i(curlProgram.uniforms.uVelocity, safeAttach(velocity.read, 0))
       blit(curl)
 
       // Vorticity
       vorticityProgram.bind()
       glRef.current.uniform2f(vorticityProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
-      glRef.current.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read.attach(0))
-      glRef.current.uniform1i(vorticityProgram.uniforms.uCurl, curl.attach(1))
+      glRef.current.uniform1i(vorticityProgram.uniforms.uVelocity, safeAttach(velocity.read, 0))
+      glRef.current.uniform1i(vorticityProgram.uniforms.uCurl, safeAttach(curl, 1))
       glRef.current.uniform1f(vorticityProgram.uniforms.curl, configRef.current.CURL)
       glRef.current.uniform1f(vorticityProgram.uniforms.dt, dt)
       blit(velocity.write)
@@ -767,12 +795,12 @@ function SplashCursor({
       // Divergence
       divergenceProgram.bind()
       glRef.current.uniform2f(divergenceProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
-      glRef.current.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read.attach(0))
+      glRef.current.uniform1i(divergenceProgram.uniforms.uVelocity, safeAttach(velocity.read, 0))
       blit(divergence)
 
       // Clear pressure
       clearProgram.bind()
-      glRef.current.uniform1i(clearProgram.uniforms.uTexture, pressure.read.attach(0))
+      glRef.current.uniform1i(clearProgram.uniforms.uTexture, safeAttach(pressure.read, 0))
       glRef.current.uniform1f(clearProgram.uniforms.value, configRef.current.PRESSURE)
       blit(pressure.write)
       pressure.swap()
@@ -780,9 +808,9 @@ function SplashCursor({
       // Pressure
       pressureProgram.bind()
       glRef.current.uniform2f(pressureProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
-      glRef.current.uniform1i(pressureProgram.uniforms.uDivergence, divergence.attach(0))
+      glRef.current.uniform1i(pressureProgram.uniforms.uDivergence, safeAttach(divergence, 0))
       for (let i = 0; i < configRef.current.PRESSURE_ITERATIONS; i++) {
-        glRef.current.uniform1i(pressureProgram.uniforms.uPressure, pressure.read.attach(1))
+        glRef.current.uniform1i(pressureProgram.uniforms.uPressure, safeAttach(pressure.read, 1))
         blit(pressure.write)
         pressure.swap()
       }
@@ -790,8 +818,8 @@ function SplashCursor({
       // Gradient Subtract
       gradienSubtractProgram.bind()
       glRef.current.uniform2f(gradienSubtractProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
-      glRef.current.uniform1i(gradienSubtractProgram.uniforms.uPressure, pressure.read.attach(0))
-      glRef.current.uniform1i(gradienSubtractProgram.uniforms.uVelocity, velocity.read.attach(1))
+      glRef.current.uniform1i(gradienSubtractProgram.uniforms.uPressure, safeAttach(pressure.read, 0))
+      glRef.current.uniform1i(gradienSubtractProgram.uniforms.uVelocity, safeAttach(velocity.read, 1))
       blit(velocity.write)
       velocity.swap()
 
@@ -800,7 +828,7 @@ function SplashCursor({
       glRef.current.uniform2f(advectionProgram.uniforms.texelSize, velocity.texelSizeX, velocity.texelSizeY)
       if (!extRef.current.supportLinearFiltering)
         glRef.current.uniform2f(advectionProgram.uniforms.dyeTexelSize, velocity.texelSizeX, velocity.texelSizeY)
-      const velocityId = velocity.read.attach(0)
+      const velocityId = safeAttach(velocity.read, 0)
       glRef.current.uniform1i(advectionProgram.uniforms.uVelocity, velocityId)
       glRef.current.uniform1i(advectionProgram.uniforms.uSource, velocityId)
       glRef.current.uniform1f(advectionProgram.uniforms.dt, dt)
@@ -810,8 +838,8 @@ function SplashCursor({
 
       if (!extRef.current.supportLinearFiltering)
         glRef.current.uniform2f(advectionProgram.uniforms.dyeTexelSize, dye.texelSizeX, dye.texelSizeY)
-      glRef.current.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read.attach(0))
-      glRef.current.uniform1i(advectionProgram.uniforms.uSource, dye.read.attach(1))
+      glRef.current.uniform1i(advectionProgram.uniforms.uVelocity, safeAttach(velocity.read, 0))
+      glRef.current.uniform1i(advectionProgram.uniforms.uSource, safeAttach(dye.read, 1))
       glRef.current.uniform1f(advectionProgram.uniforms.dissipation, configRef.current.DENSITY_DISSIPATION)
       blit(dye.write)
       dye.swap()
@@ -829,7 +857,7 @@ function SplashCursor({
       displayMaterial.bind()
       if (configRef.current.SHADING)
         glRef.current.uniform2f(displayMaterial.uniforms.texelSize, 1.0 / width, 1.0 / height)
-      glRef.current.uniform1i(displayMaterial.uniforms.uTexture, dye.read.attach(0))
+      glRef.current.uniform1i(displayMaterial.uniforms.uTexture, safeAttach(dye.read, 0))
       blit(target)
     }
 
@@ -851,7 +879,7 @@ function SplashCursor({
 
     function splat(x, y, dx, dy, color) {
       splatProgram.bind()
-      glRef.current.uniform1i(splatProgram.uniforms.uTarget, velocity.read.attach(0))
+      glRef.current.uniform1i(splatProgram.uniforms.uTarget, safeAttach(velocity.read, 0))
       glRef.current.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height)
       glRef.current.uniform2f(splatProgram.uniforms.point, x, y)
       glRef.current.uniform3f(splatProgram.uniforms.color, dx, dy, 0.0)
@@ -859,7 +887,7 @@ function SplashCursor({
       blit(velocity.write)
       velocity.swap()
 
-      glRef.current.uniform1i(splatProgram.uniforms.uTarget, dye.read.attach(0))
+      glRef.current.uniform1i(splatProgram.uniforms.uTarget, safeAttach(dye.read, 0))
       glRef.current.uniform3f(splatProgram.uniforms.color, color.r, color.g, color.b)
       blit(dye.write)
       dye.swap()
@@ -900,15 +928,13 @@ function SplashCursor({
     }
 
     function correctDeltaX(delta) {
-      const aspectRatio = canvas.width / canvas.height
-      if (aspectRatio < 1) delta *= aspectRatio
-      return delta
+      const aspect = safeAspectRatio(canvas)
+      return aspect < 1 ? delta * aspect : delta
     }
 
     function correctDeltaY(delta) {
-      const aspectRatio = canvas.width / canvas.height
-      if (aspectRatio > 1) delta /= aspectRatio
-      return delta
+      const aspect = safeAspectRatio(canvas)
+      return aspect > 1 ? delta / aspect : delta
     }
 
     function generateColor() {
@@ -1008,6 +1034,19 @@ function SplashCursor({
       return hash
     }
 
+    function safeAttach(target, id) {
+      if (!target || !target.attach) {
+        console.warn("Tried to attach undefined target.")
+        return 0
+      }
+      return target.attach(id) ?? 0
+    }
+
+    function safeAspectRatio(canvas) {
+      const aspect = canvas?.width / canvas?.height
+      return !aspect || isNaN(aspect) || !isFinite(aspect) ? 1 : aspect
+    }
+
     window.addEventListener("mousedown", (e) => {
       const pointer = pointersRef.current[0]
       const posX = scaleByPixelRatio(e.clientX)
@@ -1096,8 +1135,8 @@ function SplashCursor({
   ])
 
   return (
-    <div className="fixed top-0 left-0 z-0 pointer-events-none">
-      <canvas ref={canvasRef} id="fluid" className="w-screen h-screen" />
+    <div className="fixed inset-0 z-[1] pointer-events-none">
+      <canvas ref={canvasRef} id="fluid" className="w-full h-full pointer-events-auto" />
     </div>
   )
 }

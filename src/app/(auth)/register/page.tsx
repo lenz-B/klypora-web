@@ -2,158 +2,198 @@
 
 import type React from "react"
 import { useState } from "react"
+import Link from "next/link"
 import { SubmitHandler, useForm } from "react-hook-form"
+import { z } from "zod"
+
+import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
+import { IconBrandGoogle } from "@tabler/icons-react"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { SplashCursor } from "@/components/ui/splash-cursor"
-import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
-import Link from "next/link"
-import { IconBrandGoogle } from "@tabler/icons-react"
 import { TextHoverEffect } from "@/components/ui/text-hover-effect";
+import { zodResolver } from "@hookform/resolvers/zod"
 
-type FormFields = {
-  email: string;
-  username: string;
-  password: string;
-}
+const schema = z.object({
+  username: z
+    .string()
+    .min(1, "Username is required")
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username must be less than 20 characters")
+    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores")
+    .refine((val) => !val.includes(' '), "Username cannot contain spaces"),
+  
+  email: z
+    .string()
+    .min(1, "Email is required")
+    .email("Please enter a valid email address"),
+  
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number")
+    .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character"),
+})
+
+type FormFields = z.infer<typeof schema>
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const { register, handleSubmit } = useForm<FormFields>()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting }, 
+  } = useForm<FormFields>({
+    resolver: zodResolver(schema),
+    mode: "onBlur",
+  })
 
-  const onSubmit: SubmitHandler<FormFields>= (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<FormFields> = async (data) => {
+    try {
+      // Send to backend
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      
+      console.log(data);
+    } catch (error) {
+      setError('root', {
+        message: 'Registration failed. Please try again.'
+      })
+    }
   }
 
+
   return (
-    <div className="min-h-screen relative overflow-hidden bg-bg-dark">
-      <SplashCursor
-        BACK_COLOR={{ r: 0.1, g: 0.015, b: 0.264 }}
-        COLOR_UPDATE_SPEED={5}
-        DENSITY_DISSIPATION={2.8}
-        VELOCITY_DISSIPATION={1.8}
-        SPLAT_FORCE={4000}
-        SPLAT_RADIUS={0.15}
-      />
+    <Card className="w-full max-w-md animate-fade-in">
+      <CardHeader className="space-y-1 text-center">
+        <CardTitle className="text-2xl font-bold font-logo text-text">
+        <div className="flex-center">
+          <TextHoverEffect text="Klypora" />
+        </div>
+        </CardTitle>
+        <CardDescription className="text-text-muted">Create your account to get started</CardDescription>
+      </CardHeader>
 
-      <div className="relative z-10 flex items-center justify-center min-h-screen p-4">
-        <Card className="w-full max-w-md animate-fade-in">
-          <CardHeader className="space-y-1 text-center">
-            <CardTitle className="text-2xl font-bold text-text">
-            <div className="flex-center">
-              <TextHoverEffect text="Klypora"/>  
-            </div>
-            </CardTitle>
-            <CardDescription className="font-sans text-text-muted">Create your account to get started</CardDescription>
-          </CardHeader>
-
-          <CardContent className="space-y-4">
-            <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-              <div className="space-y-2">
-                <Label htmlFor="username" className="text-text">
-                  Username
-                </Label>
-                <div className="relative">
-                  <User className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
-                  <Input
-                    id="username"
-                    {...register("username", {
-                      required: true
-                    })}
-                    type="text"
-                    placeholder="Enter your username"
-                    className="pl-10"
-                    // required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="email" className="text-text">
-                  Email
-                </Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
-                  <Input
-                    id="email"
-                    {...register('email', {
-                      required: true
-                    })}
-                    type="email"
-                    placeholder="Enter your email"
-                    className="pl-10"
-                    // required
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="password" className="text-text">
-                  Password
-                </Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
-                  <Input
-                    id="password"
-                    {...register('password', {
-                      required: true
-                    })}
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    className="pl-10 pr-10"
-                    // required
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-3 text-text-muted hover:text-text transition-colors"
-                  >
-                    {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button
-                type="submit"
-                containerClassName="!w-full"
-                className="h-10 flex-center w-full py-2.5 transition-all duration-300 hover:shadow-lg 
-                  hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]]"
-              >
-                Create Account
-              </Button>
-            </form>
-
+      <CardContent className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+          <div className="space-y-2">
+            <Label htmlFor="username" className="text-text">
+              Username
+            </Label>
             <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <span className="w-full border-t border-border-muted/30" />
-              </div>
-              <div className="my-4 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+              <User className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
+              <Input
+                id="username"
+                {...register("username")}
+                type="text"
+                placeholder="Enter your username"
+                className="pl-10"
+              />
+              { errors.username && (
+                <div className="text-destructive text-caption mt-1" role="alert">
+                  {errors.username.message}
+                </div>
+              ) }
             </div>
+          </div>
 
-            <div className="flex-center">
-              <Button
-                variant="outline"
-                containerClassName="!w-full"
-                className="h-10 flex-center w-full bg-bg-light/10 border-border-muted/30 text-text hover:bg-bg-light/20 hover:border-primary/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          <div className="space-y-2">
+            <Label htmlFor="email" className="text-text">
+              Email
+            </Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
+              <Input
+                id="email"
+                {...register('email')}
+                type="email"
+                placeholder="Enter your email"
+                className="pl-10"
+                required
+              />
+              { errors.email && (
+                <div className="text-destructive text-caption mt-1" role="alert">
+                  {errors.email.message}
+                </div>
+              ) }
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="password" className="text-text">
+              Password
+            </Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
+              <Input
+                id="password"
+                {...register('password')}
+                type={showPassword ? "text" : "password"}
+                placeholder="Enter your password"
+                className="pl-10 pr-10"
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="absolute right-3 top-3 text-text-muted hover:text-text transition-colors"
               >
-              <IconBrandGoogle className="h-4 w-4 text-gray-50 " />
-              <span className="text-sm font-medium ml-2">
-                Log in with Google
-              </span>
-              </Button>
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+              { errors.password && (
+                <div className="text-destructive text-caption mt-1" role="alert">
+                  {errors.password.message}
+                </div>
+              ) }
             </div>
+          </div>
 
-            <p className="text-center text-sm text-gray-700">
-              Already have an account?{" "}
-              <Link href="/login" className="text-gray-500 hover:text-gray-300 transition-colors font-medium">
-                Sign in
-              </Link>
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+          {errors.root && (
+            <div className="text-destructive text-caption text-center bg-destructive/10 border border-destructive/20 rounded-md p-3" role="alert">
+              {errors.root.message}
+            </div>
+          )}
+
+          <Button
+            aria-disabled={isSubmitting}
+            containerClassName="!w-full"
+            className="h-10 flex-center w-full py-2.5 transition-all duration-300 hover:shadow-lg 
+              hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]]"
+          >
+            {isSubmitting ? 'Creating Account...' : 'Create Account'}
+          </Button>
+        </form>
+
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t border-border-muted/30" />
+          </div>
+          <div className="my-4 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-300 to-transparent dark:via-neutral-700" />
+        </div>
+
+        <div className="flex-center">
+          <Button
+            containerClassName="!w-full"
+            className="h-10 flex-center w-full bg-bg-light/10 border-border-muted/30 text-text hover:bg-bg-light/20 hover:border-primary/50 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+          >
+          <IconBrandGoogle className="h-4 w-4 text-gray-50 " />
+          <span className="text-sm font-medium ml-2">
+            Continue with Google
+          </span>
+          </Button>
+        </div>
+
+        <p className="text-center text-sm text-gray-700">
+          Already have an account?{" "}
+          <Link href="/login" className="text-gray-500 hover:text-gray-300 transition-colors font-medium">
+            Sign in
+          </Link>
+        </p>
+      </CardContent>
+    </Card>
   )
 }
