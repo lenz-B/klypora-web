@@ -2,10 +2,11 @@
 
 import type React from "react"
 import { useState, useRef, useEffect } from "react"
+import Link from "next/link"
+import { ArrowLeft, CheckCircle } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowLeft, CheckCircle } from "lucide-react"
-import Link from "next/link"
 
 export default function OTPVerificationPage() {
   const [otp, setOtp] = useState(["", "", "", "", "", ""])

@@ -2,21 +2,37 @@
 
 import type React from "react"
 import { useState } from "react"
+import Link from "next/link"
+import { Mail, ArrowLeft } from "lucide-react"
+import { useForm, SubmitHandler } from "react-hook-form"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
-import { Mail, ArrowLeft } from "lucide-react"
-import Link from "next/link"
+import { forgotPasswordSchema, ForgotPasswordForm } from "@/types/auth/forgot-password"
+import { zodResolver } from "@hookform/resolvers/zod"
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState("")
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<ForgotPasswordForm>({
+    resolver: zodResolver(forgotPasswordSchema),
+    mode: "onBlur",
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Password reset request for:", email)
-    setIsSubmitted(true)
+  const onSubmit: SubmitHandler<ForgotPasswordForm> = async (data) => {
+    try {
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      setIsSubmitted(true)
+      console.log(data)
+    } catch (error) {
+      setError('email', { message: 'Failed to send reset link' })
+    }
   }
 
   return (
@@ -34,7 +50,7 @@ export default function ForgotPasswordPage() {
 
       <CardContent className="space-y-4">
         {!isSubmitted ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-text">
                 Email
@@ -43,23 +59,28 @@ export default function ForgotPasswordPage() {
                 <Mail className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
                 <Input
                   id="email"
+                  {...register('email')}
                   type="email"
                   placeholder="Enter your email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
                   className="pl-10"
                   required
                 />
+                {errors.email && (
+                  <div className="text-destructive text-caption mt-1" role="alert">
+                    {errors.email.message}
+                  </div>
+                )}
               </div>
             </div>
 
             <div className="flex-center">
               <Button
+                aria-disabled={isSubmitting}
                 className="py-2.5 transition-all 
                 duration-300 hover:shadow-lg hover:shadow-primary/25 
                 hover:scale-[1.02] active:scale-[0.98]"
               >
-                Send Reset Link
+                {isSubmitting ? 'Sending...' : 'Send Reset Link'}
               </Button>
             </div>
 

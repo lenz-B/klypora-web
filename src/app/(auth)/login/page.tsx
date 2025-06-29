@@ -10,15 +10,30 @@ import { Eye, EyeOff, Mail, Lock } from "lucide-react"
 import Link from "next/link"
 import { IconBrandGoogle } from "@tabler/icons-react"
 import { TextHoverEffect } from "@/components/ui/text-hover-effect"
+import { loginSchema, LoginForm } from "@/types/auth/login"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm, SubmitHandler } from "react-hook-form"
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false)
-  const [email, setEmail] = useState("")
-  const [password, setPassword] = useState("")
+  const {
+    register,
+    handleSubmit,
+    setError,
+    formState: { errors, isSubmitting },
+  } = useForm<LoginForm>({
+    resolver: zodResolver(loginSchema),
+    mode: "onBlur",
+  })
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Login attempt:", { email, password })
+  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
+    try {
+      // send to backend
+      await new Promise((resolve) => setTimeout(resolve, 1000))
+      console.log(data)
+    } catch (error) {
+      setError('identifier', { message: 'Login failed' })
+    }
   }
 
   return (
@@ -33,22 +48,26 @@ export default function LoginPage() {
       </CardHeader>
 
       <CardContent className="space-y-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email" className="text-text">
-              Email
+            <Label htmlFor="identifier" className="text-text">
+              Username or Email
             </Label>
             <div className="relative">
               <Mail className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
               <Input
-                id="email"
-                type="email"
-                placeholder="Enter your email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="identifier"
+                {...register('identifier')}
+                type="text"
+                placeholder="Enter your username or email"
                 className="pl-10"
                 required
               />
+              {errors.identifier && (
+                <div className="text-destructive text-caption mt-1" role="alert">
+                  {errors.identifier.message}
+                </div>
+              )}
             </div>
           </div>
 
@@ -60,10 +79,9 @@ export default function LoginPage() {
               <Lock className="absolute left-3 top-3 h-4 w-4 text-text-muted" />
               <Input
                 id="password"
+                {...register('password')}
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter your password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="pl-10 pr-10"
                 required
               />
@@ -74,6 +92,11 @@ export default function LoginPage() {
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
+              {errors.password && (
+                <div className="text-destructive text-caption mt-1" role="alert">
+                  {errors.password.message}
+                </div>
+              )}
             </div>
           </div>
 
@@ -88,11 +111,12 @@ export default function LoginPage() {
 
           <div className="flex-center">
             <Button
+              aria-disabled={isSubmitting}
               className="flex-center w-full py-2.5 transition-all duration-300 hover:shadow-lg 
               hover:shadow-primary/25 hover:scale-[1.02] active:scale-[0.98]"
               containerClassName="!w-full"
             >
-              Sign In
+              {isSubmitting ? 'Signing In...' : 'Sign In'}
             </Button>
           </div>
 

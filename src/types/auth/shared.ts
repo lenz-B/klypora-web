@@ -2,10 +2,11 @@ import { z } from "zod"
 
 export const usernameField = z
   .string()
+  .min(1, "Username is required")
   .min(3, "Username must be at least 3 characters")
   .max(20, "Username must be less than 20 characters")
-  .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores allowed")
-  .refine((val) => !val.includes(" "), "Username cannot contain spaces")
+  .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores")
+  .refine((val) => !val.includes(' '), "Username cannot contain spaces")
 
 export const emailField = z
   .string()
@@ -14,8 +15,9 @@ export const emailField = z
 
 export const passwordField = z
   .string()
+  .min(1, "Password is required")
   .min(8, "Password must be at least 8 characters")
-  .regex(/[A-Z]/, "At least one uppercase letter")
-  .regex(/[a-z]/, "At least one lowercase letter")
-  .regex(/[0-9]/, "At least one number")
-  .regex(/[^A-Za-z0-9]/, "At least one special character")
+  .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+  .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+  .regex(/[0-9]/, "Password must contain at least one number")
+  .regex(/[^A-Za-z0-9]/, "Password must contain at least one special character")
