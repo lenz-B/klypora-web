@@ -1,140 +1,59 @@
-"use client"
-import type React from "react"
-import { useState, useEffect } from "react"
-import { motion } from "motion/react"
+import * as React from "react"
+import { Slot } from "@radix-ui/react-slot"
+import { cva, type VariantProps } from "class-variance-authority"
+
 import { cn } from "@/lib/utils"
 
-type Direction = "TOP" | "LEFT" | "BOTTOM" | "RIGHT"
-
-export function Button({
-  children,
-  containerClassName,
-  className,
-  as: Tag = "button",
-  duration = 1,
-  clockwise = true,
-  ...props
-}: React.PropsWithChildren<
+const buttonVariants = cva(
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
   {
-    as?: React.ElementType
-    containerClassName?: string
-    className?: string
-    duration?: number
-    clockwise?: boolean
-  } & React.HTMLAttributes<HTMLElement>
->) {
-  const [hovered, setHovered] = useState<boolean>(false)
-  const [direction, setDirection] = useState<Direction>("TOP")
-
-  const rotateDirection = (currentDirection: Direction): Direction => {
-    const directions: Direction[] = ["TOP", "LEFT", "BOTTOM", "RIGHT"]
-    const currentIndex = directions.indexOf(currentDirection)
-    const nextIndex = clockwise
-      ? (currentIndex - 1 + directions.length) % directions.length
-      : (currentIndex + 1) % directions.length
-    return directions[nextIndex]
+    variants: {
+      variant: {
+        default:
+          "bg-primary text-primary-foreground shadow-xs hover:bg-primary/90",
+        destructive:
+          "bg-destructive text-white shadow-xs hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+        outline:
+          "border bg-background shadow-xs hover:bg-accent hover:text-accent-foreground dark:bg-input/30 dark:border-input dark:hover:bg-input/50",
+        secondary:
+          "bg-secondary text-secondary-foreground shadow-xs hover:bg-secondary/80",
+        ghost:
+          "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
+        link: "text-primary underline-offset-4 hover:underline",
+      },
+      size: {
+        default: "h-9 px-4 py-2 has-[>svg]:px-3",
+        sm: "h-8 rounded-md gap-1.5 px-3 has-[>svg]:px-2.5",
+        lg: "h-10 rounded-md px-6 has-[>svg]:px-4",
+        icon: "size-9",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+      size: "default",
+    },
   }
+)
 
-  // Only gradients need to stay as CSS since Tailwind doesn't support complex radial gradients with CSS variables
-  const movingMap: Record<Direction, string> = {
-    TOP: "radial-gradient(20.7% 50% at 50% 0%, var(--highlight) 0%, transparent 100%)",
-    LEFT: "radial-gradient(16.6% 43.1% at 0% 50%, var(--highlight) 0%, transparent 100%)",
-    BOTTOM: "radial-gradient(20.7% 50% at 50% 100%, var(--highlight) 0%, transparent 100%)",
-    RIGHT: "radial-gradient(16.2% 41.2% at 100% 50%, var(--highlight) 0%, transparent 100%)",
-  }
-
-  const highlight = "radial-gradient(75% 181.2% at 50% 50%, var(--highlight) 0%, transparent 100%)"
-
-  useEffect(() => {
-    if (!hovered) {
-      const interval = setInterval(() => {
-        setDirection((prevState) => rotateDirection(prevState))
-      }, duration * 1000)
-      return () => clearInterval(interval)
-    }
-  }, [hovered, duration, clockwise])
+function Button({
+  className,
+  variant,
+  size,
+  asChild = false,
+  ...props
+}: React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean
+  }) {
+  const Comp = asChild ? Slot : "button"
 
   return (
-    <Tag
-      onMouseEnter={(event: React.MouseEvent<HTMLDivElement>) => {
-        setHovered(true)
-      }}
-      onMouseLeave={() => setHovered(false)}
-      className={cn(
-        // Layout & positioning - all Tailwind
-        "relative flex flex-col flex-nowrap items-center justify-center",
-        "h-min w-fit gap-10 content-center overflow-visible",
-        
-        // Shape & borders - using your design tokens
-        "rounded-full border border-border-muted p-px",
-        
-        // Background & interactions - using your color system
-        // "bg-bg-dark/20 hover:bg-bg-dark/10",
-        // "bg-bg-light/20 dark:hover:bg-bg-light/10",
-        
-        // Transitions - Tailwind classes
-        "transition-all duration-500 ease-in-out",
-        
-        // Decoration
-        "decoration-clone",
-        
-        containerClassName,
-      )}
+    <Comp
+      data-slot="button"
+      className={cn(buttonVariants({ variant, size, className }))}
       {...props}
-    >
-      {/* Button content with full Tailwind styling */}
-      <div 
-        className={cn(
-          // Layout
-          "w-auto z-10",
-          
-          // Spacing - using your design system
-          "px-4 py-2",
-          
-          // Shape - inheriting from parent
-          "rounded-[inherit]",
-          
-          className,
-          // Colors - using your design tokens
-          "shadow-input from-bg-light to-bg-light relative",
-          
-        )}
-      >
-        {children}
-      </div>
-      
-      {/* Animated gradient overlay */}
-      <motion.div
-        className={cn(
-          // Layout & positioning - all Tailwind
-          "absolute inset-0 z-0",
-          "flex-none overflow-hidden",
-          "rounded-[inherit]",
-          // Blur effect needs to stay inline since Tailwind doesn't have blur-[2px]
-        )}
-        style={{
-          filter: "blur(2px)",
-          width: "100%",
-          height: "100%",
-        }}
-        initial={{ background: movingMap[direction] }}
-        animate={{
-          background: hovered ? [movingMap[direction], highlight] : movingMap[direction],
-        }}
-        transition={{ ease: "linear", duration: duration ?? 1 }}
-      />
-      
-      {/* Inner overlay - full Tailwind */}
-      <div className={cn(
-        // Background color
-        "bg-bg-dark",
-        
-        // Layout & positioning
-        "absolute z-[1] flex-none",
-        
-        // Sizing & shape
-        "inset-[2px] rounded-[100px]"
-      )} />
-    </Tag>
+    />
   )
 }
+
+export { Button, buttonVariants }
