@@ -17,7 +17,17 @@ import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { zodResolver } from "@hookform/resolvers/zod"
 import { registerSchema, RegisterForm } from "@/types/auth/register"
 
-export default function RegisterPage() {
+const defaultValues = {
+  email: '',
+  username: '',
+  password: ''
+}
+
+interface Props{ email: string, id: number }
+
+export default function RegisterPage({
+  email, id 
+}: Props) {
   const [showPassword, setShowPassword] = useState(false)
   const {
     register,
@@ -26,6 +36,7 @@ export default function RegisterPage() {
     formState: { errors, isSubmitting }, 
   } = useForm<RegisterForm>({
     resolver: zodResolver(registerSchema),
+    defaultValues,
     mode: "onBlur",
   })
 
