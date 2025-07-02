@@ -91,13 +91,12 @@ function FormLabel({
   className,
   ...props
 }: React.ComponentProps<typeof LabelPrimitive.Root>) {
-  const { error, formItemId } = useFormField()
+  const { formItemId } = useFormField()
 
   return (
     <Label
       data-slot="form-label"
-      data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={cn(className)}
       htmlFor={formItemId}
       {...props}
     />
@@ -147,9 +146,23 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={cn("text-destructive text-sm flex items-center gap-1", className)}
       {...props}
     >
+      {error && (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="12"
+          height="12"
+          fill="none"
+          viewBox="0 0 16 16"
+          className="inline-block text-destructive shrink-0"
+        >
+          <circle cx="8" cy="8" r="7" stroke="currentColor" strokeWidth="1.5" fill="none" />
+          <rect x="7.25" y="4" width="1.5" height="5" rx="0.75" fill="currentColor" />
+          <rect x="7.25" y="10" width="1.5" height="1.5" rx="0.75" fill="currentColor" />
+        </svg>
+      )}
       {body}
     </p>
   )
