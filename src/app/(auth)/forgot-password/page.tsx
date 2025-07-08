@@ -1,7 +1,6 @@
 "use client"
 
 import React from 'react'
-import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
@@ -9,31 +8,38 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-import { emailField } from './schema'
+import {schema, SchemaType} from './schema'
 
-const formSchema = z.object({
-  email: emailField,
-})
-
-const defaultValues = {
-  email: '',
-}
+  // TODO
+    // 1 - loading state - done
+    // 2 - try catch - 
+    // 3 - 500 error handler
+    // 4 - sentry error logger
+    // 5 - show toast message on success
 
 const ForgotPassword = () => {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    defaultValues
+  const form = useForm<SchemaType>({
+    resolver: zodResolver(schema),
+    defaultValues :{
+      email:""
+    }
   })
 
-  const handleSubmit = async (data: z.infer<typeof formSchema>) => {
-    console.log(data)
+  const { isSubmitting } = form.formState;
+
+  const handleSubmit = async (data: SchemaType) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data)
+        resolve(true)
+      }, 2000)
+    })
   }
 
   return (
@@ -63,8 +69,8 @@ const ForgotPassword = () => {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <Button type='submit' className='w-full'>
-                  Send Reset Link
+                <Button type='submit' className='w-full' disabled={isSubmitting}>
+                  {isSubmitting ? 'Sending...' : 'Send Reset Link'}
                 </Button>
                 <div className="w-full mt-2 text-xs flex-center text-gray-400">
                   <Link href="/login" className="text-gray-300 hover:text-gray-200">Back to login</Link>

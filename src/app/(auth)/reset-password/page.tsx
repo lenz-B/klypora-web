@@ -15,24 +15,29 @@ import {
 import { Form, FormField, FormItem, FormControl, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-import { resetPasswordSchema } from './schema'
+import { schema, SchemaType } from './schema'
 import { Eye, EyeOff, Lock } from "lucide-react"
-
-const defaultValues = {
-  password: '',
-  confirmPassword: ''
-}
 
 const ResetPassword = () => {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
-  const form = useForm<z.infer<typeof resetPasswordSchema>>({
-    resolver: zodResolver(resetPasswordSchema),
-    defaultValues
+  const form = useForm<SchemaType>({
+    resolver: zodResolver(schema),
+    defaultValues:{
+      password: '',
+      confirmPassword: ''
+    }
   })
 
-  const handleSubmit = async (data: z.infer<typeof resetPasswordSchema>) => {
-    console.log(data)
+  const { isSubmitting } = form.formState;
+
+  const handleSubmit = async (data: SchemaType) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        console.log(data)
+        resolve(true)
+      }, 2000)
+    })
   }
 
   return (
@@ -100,8 +105,8 @@ const ResetPassword = () => {
                     <FormMessage />
                   </FormItem>
                 )} />
-                <Button type='submit' className='w-full'>
-                  Reset Password
+                <Button type='submit' className='w-full' disabled={isSubmitting}>
+                  {isSubmitting ? 'Resetting...' : 'Reset Password'}
                 </Button>
                 <div className="w-full mt-2 text-xs flex-center text-gray-400">
                   <Link href="/login" className="text-gray-300 hover:text-gray-200">Back to login</Link>
